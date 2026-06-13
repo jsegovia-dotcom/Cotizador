@@ -172,17 +172,8 @@
     <!-- PANEL DINÁMICO SEGÚN TIPO -->
     <div id="panel-tipo"></div>
 
-    <!-- ACCIONES -->
-    <div class="actions-bar" id="actions-bar" style="display:none;">
-      <button class="btn-secondary" onclick="guardarBorrador()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,12 7,12"/><polyline points="7,3 7,8 15,8"/></svg>
-        Guardar borrador
-      </button>
-      <button class="btn-primary" onclick="generarPDF()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Generar PDF
-      </button>
-    </div>
+    <!-- ESPACIO PARA QUE EL CONTENIDO NO QUEDE TAPADO POR LA BARRA FIJA -->
+    <div style="height: 80px;"></div>
   </section>
 
   <!-- ═══════════════════════════════════════════
@@ -322,6 +313,28 @@
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeClienteModal(null, true)">Cancelar</button>
       <button class="btn-primary" onclick="guardarCliente()">Guardar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     BARRA FIJA INFERIOR — siempre visible en Nueva Cotización
+═══════════════════════════════════════════ -->
+<div class="actions-bar-fixed" id="actions-bar">
+  <div class="actions-bar-inner">
+    <div class="actions-bar-info" id="actions-bar-info">
+      <span id="actions-tipo-label">Selecciona un tipo de cotización</span>
+      <span id="actions-proyecto-label"></span>
+    </div>
+    <div class="actions-bar-btns">
+      <button class="btn-secondary" onclick="guardarBorrador()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,12 7,12"/><polyline points="7,3 7,8 15,8"/></svg>
+        Guardar borrador
+      </button>
+      <button class="btn-primary" onclick="generarPDF()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Generar PDF
+      </button>
     </div>
   </div>
 </div>
