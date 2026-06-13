@@ -94,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPanelTipo('revision');
   renderListaClientes();
   renderListaCotizaciones();
+  // Mostrar barra desde el inicio (vista nueva es la activa)
+  document.getElementById('actions-bar').classList.add('visible');
+  actualizarBarraInfo();
 });
 
 // ─────────────────────────────────────────
@@ -104,6 +107,14 @@ function showView(viewId) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('view-' + viewId).classList.add('active');
   document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
+
+  // Mostrar barra fija solo en vista nueva cotización
+  const barra = document.getElementById('actions-bar');
+  if (viewId === 'nueva') {
+    barra.classList.add('visible');
+  } else {
+    barra.classList.remove('visible');
+  }
 
   if (viewId === 'guardadas') renderListaCotizaciones();
   if (viewId === 'clientes') renderListaClientes();
@@ -118,8 +129,28 @@ function selectTipo(tipo) {
   document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
   document.querySelector(`[data-tipo="${tipo}"]`).classList.add('active');
   renderPanelTipo(tipo);
-  document.getElementById('actions-bar').style.display = 'flex';
+  actualizarBarraInfo();
 }
+
+const TIPO_LABEL_MAP = {
+  'revision':  'Revisión de proyectos',
+  'ito-full':  'ITO Full-time',
+  'ito-part':  'ITO Part-time',
+  'otras':     'Otros servicios',
+};
+
+function actualizarBarraInfo() {
+  const tipoEl = document.getElementById('actions-tipo-label');
+  const projEl = document.getElementById('actions-proyecto-label');
+  if (tipoEl) tipoEl.textContent = TIPO_LABEL_MAP[state.tipoActual] || 'Nueva cotización';
+  const nombre = document.getElementById('p-nombre')?.value?.trim();
+  if (projEl) projEl.textContent = nombre || '';
+}
+
+// Actualizar nombre del proyecto en la barra al escribir
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('p-nombre')?.addEventListener('input', actualizarBarraInfo);
+});
 
 function renderPanelTipo(tipo) {
   const panel = document.getElementById('panel-tipo');
