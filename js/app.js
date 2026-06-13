@@ -790,27 +790,34 @@ function saveCotizaciones(cots) {
 }
 
 function guardarBorrador() {
-  const nombre = document.getElementById('p-nombre')?.value?.trim();
-  if (!nombre) { toast('Ingrese el nombre del proyecto', 'error'); return; }
+  try {
+    const datos = recopilarDatosFormulario();
+    const cots  = getCotizaciones();
+    const idx   = cots.findIndex(c => c.correlativo === datos.correlativo);
 
-  const datos = recopilarDatosFormulario();
-  const cots  = getCotizaciones();
-  const idx   = cots.findIndex(c => c.correlativo === datos.correlativo);
-
-  if (idx >= 0) {
-    cots[idx] = { ...cots[idx], ...datos, fechaModificacion: new Date().toISOString() };
-    toast('Borrador actualizado', 'success');
-  } else {
-    cots.unshift({ ...datos, id: Date.now().toString(), fechaCreacion: new Date().toISOString() });
-    avanzarCorrelativo();
-    toast('Borrador guardado', 'success');
+    if (idx >= 0) {
+      cots[idx] = { ...cots[idx], ...datos, fechaModificacion: new Date().toISOString() };
+      saveCotizaciones(cots);
+      toast('✓ Cotización actualizada', 'success');
+    } else {
+      cots.unshift({ ...datos, id: Date.now().toString(), fechaCreacion: new Date().toISOString() });
+      saveCotizaciones(cots);
+      avanzarCorrelativo();
+      toast('✓ Cotización guardada', 'success');
+    }
+  } catch(e) {
+    console.error('Error al guardar:', e);
+    toast('Error al guardar: ' + e.message, 'error');
   }
-  saveCotizaciones(cots);
 }
 
 function recopilarDatosFormulario() {
+  // Leer correlativo desde el estado, no desde el DOM (más confiable)
+  const num  = String(state.config.correlativo).padStart(4, '0');
+  const correlativo = `JASV_${num}/${state.config.year}/V01`;
+
   return {
-    correlativo:  document.getElementById('correlativo-badge').textContent.trim(),
+    correlativo,
     tipo:         state.tipoActual,
     cliente: {
       tratamiento: document.getElementById('c-tratamiento')?.value || '',
@@ -1004,7 +1011,8 @@ function toast(msg, tipo = '') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show' + (tipo ? ' ' + tipo : '');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
 // Trigger para recalc después de render dinámico
